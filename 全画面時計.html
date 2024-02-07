@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      html {
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      body {
+        background-color: black;
+        color: white;
+        margin: 0;
+      }
+      #datePanel {
+        display: flex;
+        justify-content: center;
+        font-size: 15vw;
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <div>
+      <p id="datePanel">00:00:00</p>
+    </div>
+    <script>
+      function getCrrentDate() {
+        const currentDate = new Date();
+        const currentHours = ("00" + currentDate.getHours()).slice(-2);
+        const currentMinutes = ("00" + currentDate.getMinutes()).slice(-2);
+        const currentSeconds = ("00" + currentDate.getSeconds()).slice(-2);
+        const _currentDate = currentHours + ":" + currentMinutes + ":" + currentSeconds;
+        return _currentDate;
+      }
+
+      function updateCrrentDatePanel() {
+        const datePanel = document.getElementById("datePanel");
+        datePanel.textContent = getCrrentDate();
+      }
+
+      setInterval("updateCrrentDatePanel()", 1000);
+    </script>
+  </body>
+</html>
