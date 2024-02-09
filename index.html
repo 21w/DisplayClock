@@ -18,9 +18,10 @@
       footer {
         background-color: #252525;
         position: fixed;
-        bottom: 0;
         width: 100%;
+        bottom: 0;
         left: 0;
+        display: flex;
       }
 
       #datePanel {
@@ -76,6 +77,12 @@
         datePanel.textContent = text;
       }
 
+      //タイトルの更新
+      function updateTitle(text) {
+        const titlePanel = document.getElementById("title");
+        titlePanel.textContent = text;
+      }
+
       //全画面モードの切り替え
       function switchFullScreen() {
         if (!document.fullscreenElement) {
@@ -90,9 +97,13 @@
         const mode = document.getElementById("mode");
         const value = mode.elements["mode"].value;
         if (value == "current_date_mode") {
+          // 現在時刻表示モード
+          updateTitle("時間");
           updateDatePanel(getCrrentDate());
         }
         if (value == "remainder_hour_mode") {
+          // 残り時間表示モード
+          updateTitle("残り");
         } else {
         }
       }
