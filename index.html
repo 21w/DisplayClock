@@ -1,9 +1,6 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Kameron:wght@700&display=swap" rel="stylesheet" />
     <style>
       html {
         min-height: 100vh;
@@ -18,20 +15,50 @@
         margin: 0;
       }
 
+      footer {
+        background-color: #252525;
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+        left: 0;
+      }
+
       #datePanel {
-        display: flex;
-        justify-content: center;
         font-size: 15vw;
         font-weight: bold;
-        font-family: "Kameron", serif;
+        margin: 0;
+      }
+
+      #title {
+        display: flex;
+        justify-content: center;
+        font-size: 10vw;
+        margin: 0;
+      }
+
+      div.centerBox {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
       }
     </style>
   </head>
 
   <body>
-    <div>
+    <div class="centerBox">
+      <p id="title">時間</p>
       <p id="datePanel">00:00:00</p>
     </div>
+    <footer>
+      <form id="mode">
+        <input type="radio" id="current_date_mode" name="mode" value="current_date_mode" checked />
+        <label for="current_date_mode">現在時刻モード</label>
+        <input type="radio" id="remainder_hour_mode" name="mode" value="remainder_hour_mode" />
+        <label for="remainder_hour_mode">残り時間モード</label>
+      </form>
+      <input type="time" id="input_time" />
+    </footer>
+
     <script>
       // 現在の時刻を取得
       function getCrrentDate() {
@@ -44,9 +71,9 @@
       }
 
       // 時刻表示の更新
-      function updateCrrentDatePanel() {
+      function updateDatePanel(text) {
         const datePanel = document.getElementById("datePanel");
-        datePanel.textContent = getCrrentDate();
+        datePanel.textContent = text;
       }
 
       //全画面モードの切り替え
@@ -58,8 +85,20 @@
         }
       }
 
+      function main() {
+        // 表示モードのチェック
+        const mode = document.getElementById("mode");
+        const value = mode.elements["mode"].value;
+        if (value == "current_date_mode") {
+          updateDatePanel(getCrrentDate());
+        }
+        if (value == "remainder_hour_mode") {
+        } else {
+        }
+      }
+
       // 定期的な時刻表示の更新
-      setInterval("updateCrrentDatePanel()", 1000);
+      setInterval("main()", 1000);
 
       // キーストロークの監視
       document.addEventListener(
