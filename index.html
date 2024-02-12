@@ -92,29 +92,18 @@
         }
       }
 
-      function main() {
-        // 表示モードのチェック
-        const mode = document.getElementById("mode");
-        const value = mode.elements["mode"].value;
-        if (value == "current_date_mode") {
-          // 現在時刻表示モード
-          updateTitle("時間");
-          updateDatePanel(getCrrentDate());
-        }
-        if (value == "remainder_hour_mode") {
-          // 残り時間表示モード
-          updateTitle("残り");
-        } else {
-        }
-      }
-
+      let mode = "current_date_mode";
       // ラジオボタンのイベント監視
       const radio_form = document.getElementById("mode");
       radio_form.addEventListener("change",()=>{
         // 現在のモード
-        const current_mode = mode.elements["mode"].value;
-        if (current_mode == "remainder_hour_mode") {
-
+        const current_mode = radio_form.elements["mode"].value;
+        if(current_mode == "current_date_mode"){
+          // 現在時間モード
+          updateTitle("現在");
+        }else if (current_mode == "remainder_hour_mode") {
+          // 残り時間モード
+          updateTitle("残り");
         }
       });
 
@@ -131,6 +120,15 @@
 
       // 定期的な時刻表示の更新
       setInterval("main()", 1000);
+      function main() {
+        if (mode == "current_date_mode") {
+          // 現在時刻表示モード
+          updateDatePanel(getCrrentDate());
+        } else if (mode == "remainder_hour_mode") {
+          // 残り時間表示モード
+          
+        }
+      }
 
       // キーストロークの監視
       document.addEventListener(
