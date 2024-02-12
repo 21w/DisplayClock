@@ -75,9 +75,16 @@
     // 残り時間の計算
     function time_limit_calculation() {
       const currentDate = new Date();
-      let time = currentDate.getTime() - time_limit.getTime();
-      time = Math.floor(time / 1000) * -1;
-
+      let time;
+      if (currentDate.getTime() < time_limit.getTime()) {
+        // タイムリミットを超過していない場合
+        time = currentDate.getTime() - time_limit.getTime();
+      } else {
+        // タイムリミットを超過している場合
+        time = time_limit.getTime() - currentDate.getTime();
+      }
+      time = time / 1000 * -1;
+      
       const timeLimit_hours = ("00" + Math.floor((time / 60 / 60) % 24)).slice(-2);
       const timeLimit_Minutes = ("00" + Math.floor((time / 60) % 60)).slice(-2);
       const timeLimit_Seconds = ("00" + Math.floor(time % 60)).slice(-2);
