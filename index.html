@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <style>
     html {
@@ -15,19 +16,51 @@
       margin: 0;
     }
 
-    #datePanel {
+    footer {
+      background-color: #252525;
+      position: fixed;
+      width: 100%;
+      bottom: 0;
+      left: 0;
       display: flex;
-      justify-content: center;
+    }
+
+    #datePanel {
       font-size: 15vw;
       font-weight: bold;
+      margin: 0;
+    }
+
+    #title {
+      display: flex;
+      justify-content: center;
+      font-size: 10vw;
+      margin: 0;
+    }
+
+    div.centerBox {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
     }
   </style>
 </head>
 
 <body>
-  <div>
+  <div class="centerBox">
+    <p id="title">時間</p>
     <p id="datePanel">00:00:00</p>
   </div>
+  <footer>
+    <form id="mode">
+      <input type="radio" id="current_date_mode" name="mode" value="current_date_mode" checked />
+      <label for="current_date_mode">現在時刻モード</label>
+      <input type="radio" id="remainder_hour_mode" name="mode" value="remainder_hour_mode" />
+      <label for="remainder_hour_mode">残り時間モード</label>
+    </form>
+    <input type="time" id="input_time_limit" />
+  </footer>
+
   <script>
     // 現在の時刻を取得
     function getCrrentDate() {
@@ -39,10 +72,35 @@
       return _currentDate;
     }
 
+    // 残り時間の計算
+    function time_limit_calculation() {
+      const currentDate = new Date();
+      let time;
+      if (currentDate.getTime() < time_limit.getTime()) {
+        // タイムリミットを超過していない場合
+        time = currentDate.getTime() - time_limit.getTime();
+      } else {
+        // タイムリミットを超過している場合
+        time = time_limit.getTime() - currentDate.getTime();
+      }
+      time = time / 1000 * -1;
+      
+      const timeLimit_hours = ("00" + Math.floor((time / 60 / 60) % 24)).slice(-2);
+      const timeLimit_Minutes = ("00" + Math.floor((time / 60) % 60)).slice(-2);
+      const timeLimit_Seconds = ("00" + Math.floor(time % 60)).slice(-2);
+      return timeLimit_hours + ":" + timeLimit_Minutes + ":" + timeLimit_Seconds;
+    }
+
     // 時刻表示の更新
-    function updateCrrentDatePanel() {
+    function updateDatePanel(text) {
       const datePanel = document.getElementById("datePanel");
-      datePanel.textContent = getCrrentDate();
+      datePanel.textContent = text;
+    }
+
+    //タイトルの更新
+    function updateTitle(text) {
+      const titlePanel = document.getElementById("title");
+      titlePanel.textContent = text;
     }
 
     //全画面モードの切り替え
@@ -50,20 +108,60 @@
       if (!document.fullscreenElement) {
         document.documentElement.requestFullscreen();
       } else {
-        document.exitFullscreen()
+        document.exitFullscreen();
       }
     }
 
+    let mode = "current_date_mode";
+    // ラジオボタンのイベント監視
+    const radio_form = document.getElementById("mode");
+    radio_form.addEventListener("change", () => {
+      // 現在のモード
+      const current_mode = radio_form.elements["mode"].value;
+      if (current_mode == "current_date_mode") {
+        // 現在時間モード
+        updateTitle("現在");
+        mode = "current_date_mode";
+      } else if (current_mode == "remainder_hour_mode") {
+        // 残り時間モード
+        updateTitle("残り");
+        mode = "remainder_hour_mode";
+      }
+    });
+
+    let time_limit = new Date();
+    // タイムリミットのイベント監視
+    const input_time_limit = document.getElementById("input_time_limit");
+    input_time_limit.addEventListener("change", () => {
+      const _time_limit = input_time_limit.value.split(":");
+      time_limit.setHours(_time_limit[0]);
+      time_limit.setMinutes(_time_limit[1]);
+      time_limit.setSeconds(0);
+    });
+
     // 定期的な時刻表示の更新
-    setInterval("updateCrrentDatePanel()", 1000);
+    setInterval("main()", 1000);
+    function main() {
+      if (mode == "current_date_mode") {
+        // 現在時刻表示モード
+        updateDatePanel(getCrrentDate());
+      } else if (mode == "remainder_hour_mode") {
+        // 残り時間表示モード
+        updateDatePanel(time_limit_calculation());
+      }
+    }
 
     // キーストロークの監視
-    document.addEventListener("keydown", (event) => {
-      if (event.key === "f") {
-        switchFullScreen();
-      }
-    }, false,);
-
+    document.addEventListener(
+      "keydown",
+      (event) => {
+        if (event.key === "f") {
+          switchFullScreen();
+        }
+      },
+      false
+    );
   </script>
 </body>
+
 </html>
