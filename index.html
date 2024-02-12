@@ -57,7 +57,7 @@
         <input type="radio" id="remainder_hour_mode" name="mode" value="remainder_hour_mode" />
         <label for="remainder_hour_mode">残り時間モード</label>
       </form>
-      <input type="time" id="input_time" />
+      <input type="time" id="time_limit" />
     </footer>
 
     <script>
@@ -69,6 +69,29 @@
         const currentSeconds = ("00" + currentDate.getSeconds()).slice(-2);
         const _currentDate = currentHours + ":" + currentMinutes + ":" + currentSeconds;
         return _currentDate;
+      }
+
+      // 残り時間の取得
+      function getTimeLimit(){
+        const _timeLimit = document.getElementById("time_limit");
+        const _value = _timeLimit.value;
+        const value = _value.split(":");
+        let timeLimit = new Date();
+        timeLimit.setHours(value[0]);
+        timeLimit.setMinutes(value[1]);
+        return timeLimit;
+      }
+
+      // 残り時間の計算
+      function time_limit_calculation(){
+        const currentDate = new Date();
+        let timeLimit = currentDate.getTime() - getTimeLimit().getTime();
+        const timeLimit_hours = currentDate.getHours() - getTimeLimit().getHours();
+        const timeLimit_Minutes = currentDate.getMinutes() - getTimeLimit().getMinutes();
+        const timeLimit_Seconds = currentDate.getSeconds()-getTimeLimit().getSeconds();
+        console.log(currentDate.getSeconds());
+        console.log(getTimeLimit().getSeconds());
+        return timeLimit_hours + ":" + timeLimit_Minutes + ":" + timeLimit_Seconds;
       }
 
       // 時刻表示の更新
@@ -104,6 +127,7 @@
         if (value == "remainder_hour_mode") {
           // 残り時間表示モード
           updateTitle("残り");
+          updateDatePanel(time_limit_calculation());
         } else {
         }
       }
