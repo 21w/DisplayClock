@@ -57,7 +57,7 @@
         <input type="radio" id="remainder_hour_mode" name="mode" value="remainder_hour_mode" />
         <label for="remainder_hour_mode">残り時間モード</label>
       </form>
-      <input type="time" id="input_time" />
+      <input type="time" id="input_time_limit" />
     </footer>
 
     <script>
@@ -107,6 +107,27 @@
         } else {
         }
       }
+
+      // ラジオボタンのイベント監視
+      const radio_form = document.getElementById("mode");
+      radio_form.addEventListener("change",()=>{
+        // 現在のモード
+        const current_mode = mode.elements["mode"].value;
+        if (current_mode == "remainder_hour_mode") {
+
+        }
+      });
+
+      let time_limit = new Date();
+      // タイムリミットのイベント監視
+      const input_time_limit = document.getElementById("input_time_limit");
+      input_time_limit.addEventListener("change",()=>{
+        const _time_limit = input_time_limit.value.split(":");
+        time_limit.setHours(_time_limit[0]);
+        time_limit.setMinutes(_time_limit[1]);
+        time_limit.setSeconds(0);
+        console.log(time_limit)
+      });
 
       // 定期的な時刻表示の更新
       setInterval("main()", 1000);
